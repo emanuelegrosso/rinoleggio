@@ -14,9 +14,12 @@
     <header class="site-header">
         <a class="brand" href="/">Rinoleggio</a>
         <nav class="header-nav">
+            <a asp-page="/Contratti/Index">Cerca contratti</a>
             @if (SignInManager.IsSignedIn(User))
             {
-                <a asp-page="/Account/Index">Il mio account</a>
+                <a asp-page="/Listings/Index">I miei contratti</a>
+                <a asp-page="/Listings/Create">Inserisci</a>
+                <a asp-page="/Account/Index">Account</a>
                 <form method="post" asp-page="/Account/Logout" class="inline-form">
                     <button type="submit" class="link-button">Esci</button>
                 </form>

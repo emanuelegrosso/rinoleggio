@@ -2,7 +2,9 @@
 
 Percorso di riferimento (Windows): `C:\EG\Rinoleggio\MVP\dotnet`
 
-Stack MVP **senza ABP/Orchard**: ASP.NET Core 8, Razor Pages, EF Core 8, SQLite file locale, ASP.NET Core Identity (ruoli `Administrator`, `BackOffice`, `Authenticated`).
+Stack MVP **senza ABP/Orchard**: ASP.NET Core 8, Razor Pages, EF Core 8, SQLite file locale, ASP.NET Core Identity.
+
+**Perimetro MVP attuale:** solo **inserimento** e **ricerca** contratti NLT (vedi documentazione progetto `docs/mvp-dotnet-contratti-scope.md` nel Project store).
 
 ## Soluzione
 
@@ -43,17 +45,16 @@ dotnet ef database update \
   --startup-project src/Rinoleggio.Web
 ```
 
-## Roadmap funzionale (MVP)
+## Funzionalità MVP (inserimento + ricerca)
 
-1. **Fase 0** — schema DB, Identity, seed province/marche/società NLT, homepage placeholder.
-2. **Fase 1** — Registrazione + `UserProfile`, login, area account (`/account`, `/account/profile`).
-3. **Fase 2** — CRUD annuncio (aggregate `Listing` + part 1:1), upload immagini su disco (`wwwroot/uploads` o path configurabile).
-4. **Fase 3** — Catalogo pubblico con filtri (provincia, marca, canone, km residui), dettaglio annuncio.
-5. **Fase 4** — Lead di subentro + policy (un lead aperto per buyer/listing).
-6. **Fase 5** — Backoffice (`BackOffice` policy): moderazione stati, gestione lead, anagrafiche.
-7. **Fase 6** — Pagine editoriali (`SitePage`) e menu statico da config.
+| Route | Descrizione |
+|-------|-------------|
+| `/contratti` | Ricerca pubblica con filtri |
+| `/contratti/{id}` | Dettaglio contratto |
+| `/listings/create` | Inserimento (login richiesto) → **Salva e pubblica** |
+| `/listings` | Elenco contratti dell'utente |
 
-Regole business (validazioni contratto, `RemainingKm`, stati `Deleted`/`StatusReason`, permessi) vanno implementate nei servizi applicativi prima della pubblicazione.
+Lead, backoffice, immagini e pagine editoriali sono **fuori scope** per questo MVP.
 
 ## Rapporto con Orchard/ABP
 

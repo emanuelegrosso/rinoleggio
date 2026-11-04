@@ -1,11 +1,11 @@
 @page "{id:guid}"
 @model Rinoleggio.Web.Pages.Listings.EditModel
 @{
-    ViewData["Title"] = "Modifica annuncio";
+    ViewData["Title"] = "Modifica contratto";
 }
 
 <main class="form-page">
-    <h1>Modifica annuncio</h1>
+    <h1>Modifica contratto</h1>
 
     @if (TempData["StatusMessage"] is string status)
     {
@@ -15,21 +15,10 @@
     <form method="post">
         <input type="hidden" asp-for="Input.ListingId" />
         <partial name="_ListingForm" model="Model" />
-        <button type="submit">Salva bozza</button>
+        <button type="submit">Salva e pubblica</button>
     </form>
 
-    <hr />
-    <h2>Elimina annuncio</h2>
-    <form method="post" asp-page-handler="Delete">
-        <input type="hidden" name="id" value="@Model.Input.ListingId" />
-        <div class="field">
-            <label for="deleteReason">Motivo eliminazione</label>
-            <input id="deleteReason" name="deleteReason" required maxlength="1000" />
-        </div>
-        <button type="submit" class="danger">Elimina (soft delete)</button>
-    </form>
-
-    <p class="form-footer"><a asp-page="Index">← I miei annunci</a></p>
+    <p class="form-footer"><a asp-page="Index">← I miei contratti</a></p>
 </main>
 
 @section Scripts {

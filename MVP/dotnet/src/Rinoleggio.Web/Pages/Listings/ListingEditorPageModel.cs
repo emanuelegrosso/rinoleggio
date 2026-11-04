@@ -59,7 +59,7 @@ public abstract class ListingEditorPageModel : PageModel
             return Page();
         }
 
-        var (success, error, listingId) = await _listingService.SaveDraftAsync(user.Id, Input);
+        var (success, error, listingId) = await _listingService.SaveContractAsync(user.Id, Input, publish: true);
         if (!success)
         {
             ModelState.AddModelError(string.Empty, error ?? "Salvataggio non riuscito.");
@@ -67,7 +67,7 @@ public abstract class ListingEditorPageModel : PageModel
             return Page();
         }
 
-        TempData["StatusMessage"] = "Bozza salvata.";
+        TempData["StatusMessage"] = "Contratto salvato e visibile nella ricerca.";
         return RedirectToPage("Edit", new { id = listingId });
     }
 }

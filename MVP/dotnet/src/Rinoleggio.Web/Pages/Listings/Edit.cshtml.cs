@@ -33,35 +33,4 @@ public class EditModel(
     }
 
     public Task<IActionResult> OnPostAsync() => SaveAsync();
-
-    public async Task<IActionResult> OnPostDeleteAsync(Guid id, string deleteReason)
-    {
-        var user = await userManager.GetUserAsync(User);
-        if (user is null)
-        {
-            return Challenge();
-        }
-
-        if (string.IsNullOrWhiteSpace(deleteReason))
-        {
-            ModelState.AddModelError(string.Empty, "Indica un motivo per l'eliminazione.");
-            var listing = await listingService.GetOwnedListingAsync(id, user.Id);
-            if (listing is null)
-            {
-                return NotFound();
-            }
-
-            Input = ListingService.FromListing(listing);
-            await LoadLookupsAsync();
-            return Page();
-        }
-
-        var ok = await listingService.SoftDeleteAsync(id, user.Id, deleteReason);
-        if (!ok)
-        {
-            return NotFound();
-        }
-
-        return RedirectToPage("Index");
-    }
 }

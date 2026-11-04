@@ -1,14 +1,15 @@
 @page
 @model Rinoleggio.Web.Pages.Listings.CreateModel
 @{
-    ViewData["Title"] = "Nuovo annuncio";
+    ViewData["Title"] = "Inserisci contratto";
 }
 
 <main class="form-page">
-    <h1>Nuovo annuncio (bozza)</h1>
+    <h1>Inserisci contratto</h1>
+    <p class="hint">Al salvataggio il contratto sarà visibile nella ricerca se la data di fine è futura e il canone è valido.</p>
     <form method="post">
         <partial name="_ListingForm" model="Model" />
-        <button type="submit">Salva bozza</button>
+        <button type="submit">Salva e pubblica</button>
     </form>
     <p class="form-footer"><a asp-page="Index">← I miei annunci</a></p>
 </main>

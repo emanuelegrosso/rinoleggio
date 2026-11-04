@@ -23,15 +23,134 @@ public class ListingService(RinoleggioDbContext db)
             .Include(l => l.Services)
             .FirstOrDefaultAsync(l => l.Id == listingId && l.OwnerId == ownerId, ct);
 
-    public async Task<(bool Success, string? Error, Guid? ListingId)> SaveDraftAsync(
+    public async Task<ContractSearchResult> SearchPublicAsync(
+        ContractSearchCriteria criteria,
+        CancellationToken ct = default)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var page = Math.Max(1, criteria.Page);
+        var pageSize = Math.Clamp(criteria.PageSize, 1, 48);
+
+        var query = db.Listings
+            .AsNoTracking()
+            .Where(l => l.IsPublished
+                        && l.BusinessStatus == ListingBusinessStatus.Active
+                        && l.Contract != null
+                        && l.Vehicle != null
+                        && l.Contract.EndDate > today);
+
+        if (criteria.ProvinceId is { } provinceId)
+        {
+            query = query.Where(l => l.ProvinceId == provinceId);
+        }
+
+        if (criteria.BrandId is { } brandId)
+        {
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.BrandId == brandId);
+        }
+
+        if (criteria.RentalCompanyId is { } companyId)
+        {
+            query = query.Where(l => l.Contract!.RentalCompanyId == companyId);
+        }
+
+        if (criteria.FuelType is { } fuel)
+        {
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.FuelType == fuel);
+        }
+
+        if (criteria.MonthlyFeeMin is { } feeMin)
+        {
+            query = query.Where(l => l.Contract!.MonthlyFee >= feeMin);
+        }
+
+        if (criteria.MonthlyFeeMax is { } feeMax)
+        {
+            query = query.Where(l => l.Contract!.MonthlyFee <= feeMax);
+        }
+
+        if (criteria.RemainingKmMin is { } kmMin)
+        {
+            query = query.Where(l => l.Contract!.RemainingKm >= kmMin);
+        }
+
+        if (!string.IsNullOrWhiteSpace(criteria.Query))
+        {
+            var term = criteria.Query.Trim();
+            query = query.Where(l =>
+                l.Title.Contains(term)
+                || (l.Vehicle != null && (l.Vehicle.Model.Contains(term) || (l.Vehicle.Version != null && l.Vehicle.Version.Contains(term)))));
+        }
+
+        var total = await query.CountAsync(ct);
+
+        var items = await query
+            .OrderByDescending(l => l.PublishedAt ?? l.CreationTime)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(l => new ListingSummary
+            {
+                Id = l.Id,
+                Title = l.Title,
+                SlugPath = l.SlugPath,
+                ProvinceName = l.Province.Name,
+                BrandName = l.Vehicle!.Brand.Name,
+                Model = l.Vehicle.Model,
+                MonthlyFee = l.Contract!.MonthlyFee,
+                VatIncluded = l.Contract.VatIncluded,
+                RemainingKm = l.Contract.RemainingKm,
+                EndDate = l.Contract.EndDate,
+                RentalCompanyName = l.Contract.RentalCompany.Name,
+                FuelType = l.Vehicle.FuelType
+            })
+            .ToListAsync(ct);
+
+        return new ContractSearchResult
+        {
+            Items = items,
+            TotalCount = total,
+            Page = page,
+            PageSize = pageSize
+        };
+    }
+
+    public async Task<Listing?> GetPublicListingAsync(Guid id, CancellationToken ct = default)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        return await db.Listings
+            .AsNoTracking()
+            .Include(l => l.Province)
+            .Include(l => l.Contract)!.ThenInclude(c => c!.RentalCompany)
+            .Include(l => l.Vehicle)!.ThenInclude(v => v!.Brand)
+            .Include(l => l.Services)
+            .Include(l => l.Owner)!.ThenInclude(u => u!.Profile)
+            .FirstOrDefaultAsync(l =>
+                l.Id == id
+                && l.IsPublished
+                && l.BusinessStatus == ListingBusinessStatus.Active
+                && l.Contract != null
+                && l.Contract.EndDate > today, ct);
+    }
+
+    public async Task<(bool Success, string? Error, Guid? ListingId)> SaveContractAsync(
         Guid ownerId,
         ListingEditorModel input,
+        bool publish,
         CancellationToken ct = default)
     {
         var validationError = ValidateDraft(input);
         if (validationError is not null)
         {
             return (false, validationError, null);
+        }
+
+        if (publish)
+        {
+            var publishError = ValidateForPublish(input);
+            if (publishError is not null)
+            {
+                return (false, publishError, null);
+            }
         }
 
         var brand = await db.Brands.AsNoTracking().FirstOrDefaultAsync(b => b.Id == input.BrandId && b.IsActive, ct);
@@ -79,6 +198,16 @@ public class ListingService(RinoleggioDbContext db)
                 CreationTime = DateTime.UtcNow
             };
             db.Listings.Add(listing);
+        }
+
+        if (publish)
+        {
+            listing.IsPublished = true;
+            listing.PublishedAt = DateTime.UtcNow;
+        }
+        else if (input.ListingId is null)
+        {
+            listing.IsPublished = false;
         }
 
         var remainingKm = Math.Max(0, input.TotalKm - input.CurrentKm);
@@ -178,6 +307,22 @@ public class ListingService(RinoleggioDbContext db)
         if (input.StartDate is { } start && input.EndDate <= start)
         {
             return "La data di fine deve essere successiva alla data di inizio.";
+        }
+
+        return null;
+    }
+
+    private static string? ValidateForPublish(ListingEditorModel input)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        if (input.EndDate <= today)
+        {
+            return "La data di fine contratto deve essere futura per rendere visibile l'annuncio.";
+        }
+
+        if (input.MonthlyFee <= 0)
+        {
+            return "Indica un canone mensile maggiore di zero.";
         }
 
         return null;

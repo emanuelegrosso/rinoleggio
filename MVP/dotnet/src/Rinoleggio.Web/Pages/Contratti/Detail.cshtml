@@ -1,0 +1,74 @@
+@page "{id:guid}"
+@model Rinoleggio.Web.Pages.Contratti.DetailModel
+@{
+    var c = Model.Contract!;
+    var contract = c.Contract!;
+    var vehicle = c.Vehicle!;
+    ViewData["Title"] = c.Title;
+}
+
+<main>
+    <p><a asp-page="Index">← Torna alla ricerca</a></p>
+
+    <h1>@c.Title</h1>
+    <p class="muted">@vehicle.Brand.Name @vehicle.Model @(vehicle.Version) · @c.Province.Name · @Model.SellerDisplayName</p>
+
+    <section class="detail-block">
+        <h2>Contratto NLT</h2>
+        <dl class="detail-list">
+            <dt>Società</dt><dd>@contract.RentalCompany.Name</dd>
+            <dt>Canone</dt><dd>@contract.MonthlyFee.ToString("N2") € / mese @(contract.VatIncluded ? "(IVA inclusa)" : "(+ IVA)")</dd>
+            <dt>Fine contratto</dt><dd>@contract.EndDate.ToString("d")</dd>
+            @if (contract.StartDate is not null)
+            {
+                <dt>Inizio</dt><dd>@contract.StartDate.Value.ToString("d")</dd>
+            }
+            <dt>Km totali / percorsi / residui</dt>
+            <dd>@contract.TotalKm.ToString("N0") / @contract.CurrentKm.ToString("N0") / <strong>@contract.RemainingKm.ToString("N0")</strong></dd>
+            @if (contract.InitialPayment > 0)
+            {
+                <dt>Anticipo</dt><dd>@contract.InitialPayment.ToString("N2") €</dd>
+            }
+        </dl>
+    </section>
+
+    <section class="detail-block">
+        <h2>Veicolo</h2>
+        <dl class="detail-list">
+            <dt>Immatricolazione</dt><dd>@vehicle.RegistrationYear</dd>
+            <dt>Alimentazione</dt><dd>@vehicle.FuelType</dd>
+            <dt>Cambio</dt><dd>@vehicle.Transmission</dd>
+        </dl>
+    </section>
+
+    @if (c.TransferContributionType != Rinoleggio.Domain.Enums.TransferContributionType.None)
+    {
+        <section class="detail-block">
+            <h2>Contributo subentro</h2>
+            <p>@c.TransferContributionType: @c.TransferContributionAmount.ToString("N2") €</p>
+        </section>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(c.DescriptionHtml))
+    {
+        <section class="detail-block">
+            <h2>Descrizione</h2>
+            <div>@Html.Raw(c.DescriptionHtml)</div>
+        </section>
+    }
+
+    @if (c.Services is not null)
+    {
+        <section class="detail-block">
+            <h2>Servizi inclusi</h2>
+            <ul class="check-list">
+                @if (c.Services.MaintenanceIncluded) { <li>Manutenzione</li> }
+                @if (c.Services.InsuranceIncluded) { <li>Assicurazione</li> }
+                @if (c.Services.RoadsideAssistanceIncluded) { <li>Assistenza stradale</li> }
+                @if (c.Services.ReplacementCarIncluded) { <li>Auto sostitutiva</li> }
+                @if (c.Services.TiresIncluded) { <li>Pneumatici</li> }
+                @if (c.Services.RoadTaxIncluded) { <li>Bollo</li> }
+            </ul>
+        </section>
+    }
+</main>

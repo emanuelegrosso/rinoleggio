@@ -1,16 +1,16 @@
 @page
 @model Rinoleggio.Web.Pages.Listings.IndexModel
 @{
-    ViewData["Title"] = "I miei annunci";
+    ViewData["Title"] = "I miei contratti";
 }
 
 <main>
-    <h1>I miei annunci</h1>
-    <p><a asp-page="Create">+ Nuovo annuncio</a></p>
+    <h1>I miei contratti</h1>
+    <p><a asp-page="Create">+ Inserisci contratto</a></p>
 
     @if (!Model.Items.Any())
     {
-        <p class="muted">Non hai ancora annunci. Creane uno in bozza.</p>
+        <p class="muted">Non hai ancora inserito contratti.</p>
     }
     else
     {
@@ -25,15 +25,19 @@
                     }
                     else
                     {
-                        <span class="badge muted">Bozza</span>
+                        <span class="badge muted">Non visibile</span>
                     }
-                    — @item.BusinessStatus
                     @if (item.Contract is not null)
                     {
                         <span> · @item.Contract.MonthlyFee.ToString("C")/mese · @item.Contract.RemainingKm km residui</span>
                     }
                     <div>
                         <a asp-page="Edit" asp-route-id="@item.Id">Modifica</a>
+                        @if (item.IsPublished)
+                        {
+                            <span> · </span>
+                            <a asp-page="/Contratti/Detail" asp-route-id="@item.Id">Vedi in ricerca</a>
+                        }
                     </div>
                 </li>
             }
