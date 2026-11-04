@@ -51,8 +51,9 @@ dotnet ef database update \
 |-------|-------------|
 | `/contratti` | Ricerca pubblica con filtri |
 | `/contratti/{id}` | Dettaglio contratto |
-| `/listings/create` | Inserimento (login richiesto) → **Salva e pubblica** |
-| `/listings` | Elenco contratti dell'utente |
+| `/contratti/inserisci` | Inserimento **senza login** → **Salva e pubblica** |
+
+I vecchi URL `/listings/*` reindirizzano alle pagine sopra.
 
 Lead, backoffice, immagini e pagine editoriali sono **fuori scope** per questo MVP.
 

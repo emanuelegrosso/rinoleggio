@@ -64,7 +64,8 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<RinoleggioDbContext>();
     await db.Database.MigrateAsync();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-    await MvpDataSeeder.SeedAsync(db, roleManager);
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+    await MvpDataSeeder.SeedAsync(db, roleManager, userManager);
 }
 
 app.Run();

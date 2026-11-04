@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Rinoleggio.Domain.Entities;
+using Rinoleggio.Infrastructure.Data;
 using Rinoleggio.Infrastructure.Listings;
 
 namespace Rinoleggio.Web.Pages.Contratti;
@@ -19,7 +20,9 @@ public class DetailModel(ListingService listingService) : PageModel
             return NotFound();
         }
 
-        SellerDisplayName = Contract.Owner.Profile?.FullName ?? "Venditore";
+        SellerDisplayName = Contract.OwnerId == AnonymousListingOwner.UserId
+            ? "Inserimento pubblico"
+            : Contract.Owner.Profile?.FullName ?? "Venditore";
         return Page();
     }
 }

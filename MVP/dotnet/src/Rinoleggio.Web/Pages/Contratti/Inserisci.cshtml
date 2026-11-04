@@ -1,0 +1,21 @@
+@page
+@model Rinoleggio.Web.Pages.Contratti.InserisciModel
+@{
+    ViewData["Title"] = "Inserisci contratto";
+}
+
+<main class="form-page">
+    <h1>Inserisci contratto</h1>
+    <p class="hint">Nessuna registrazione richiesta. Dopo il salvataggio il contratto compare nella ricerca (data fine futura e canone valido).</p>
+
+    <form method="post">
+        <partial name="_ContractForm" model="Model" />
+        <button type="submit">Salva e pubblica</button>
+    </form>
+
+    <p class="form-footer"><a asp-page="Index">← Cerca contratti</a></p>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

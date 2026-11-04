@@ -1,7 +1,3 @@
-@using Microsoft.AspNetCore.Identity
-@using Rinoleggio.Domain.Entities
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -15,20 +11,7 @@
         <a class="brand" href="/">Rinoleggio</a>
         <nav class="header-nav">
             <a asp-page="/Contratti/Index">Cerca contratti</a>
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <a asp-page="/Listings/Index">I miei contratti</a>
-                <a asp-page="/Listings/Create">Inserisci</a>
-                <a asp-page="/Account/Index">Account</a>
-                <form method="post" asp-page="/Account/Logout" class="inline-form">
-                    <button type="submit" class="link-button">Esci</button>
-                </form>
-            }
-            else
-            {
-                <a asp-page="/Account/Login">Accedi</a>
-                <a asp-page="/Account/Register">Registrati</a>
-            }
+            <a asp-page="/Contratti/Inserisci">Inserisci contratto</a>
         </nav>
     </header>
     @RenderBody()

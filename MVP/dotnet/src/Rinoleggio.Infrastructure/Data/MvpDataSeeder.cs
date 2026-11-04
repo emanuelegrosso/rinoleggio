@@ -9,7 +9,10 @@ public static class MvpDataSeeder
 {
     public static readonly string[] Roles = ["Administrator", "BackOffice", "Authenticated"];
 
-    public static async Task SeedAsync(RinoleggioDbContext db, RoleManager<IdentityRole<Guid>> roleManager)
+    public static async Task SeedAsync(
+        RinoleggioDbContext db,
+        RoleManager<IdentityRole<Guid>> roleManager,
+        UserManager<AppUser> userManager)
     {
         foreach (var role in Roles)
         {
@@ -18,6 +21,8 @@ public static class MvpDataSeeder
                 await roleManager.CreateAsync(new IdentityRole<Guid>(role));
             }
         }
+
+        await EnsureAnonymousOwnerAsync(userManager);
 
         if (await db.Provinces.AnyAsync())
         {
@@ -53,5 +58,29 @@ public static class MvpDataSeeder
         });
 
         await db.SaveChangesAsync();
+    }
+
+    private static async Task EnsureAnonymousOwnerAsync(UserManager<AppUser> userManager)
+    {
+        var existing = await userManager.FindByIdAsync(AnonymousListingOwner.UserId.ToString());
+        if (existing is not null)
+        {
+            return;
+        }
+
+        var user = new AppUser
+        {
+            Id = AnonymousListingOwner.UserId,
+            UserName = AnonymousListingOwner.Email,
+            Email = AnonymousListingOwner.Email,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(user, $"Anon-{AnonymousListingOwner.UserId:N}-NotForLogin!");
+        if (!result.Succeeded)
+        {
+            throw new InvalidOperationException(
+                "Impossibile creare l'utente anonimo: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+        }
     }
 }
