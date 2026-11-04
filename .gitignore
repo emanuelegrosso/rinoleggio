@@ -55,3 +55,8 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Rinoleggio MVP SQLite
+**/App_Data/*.db
+**/App_Data/*.db-*
+**/App_Data/uploads/

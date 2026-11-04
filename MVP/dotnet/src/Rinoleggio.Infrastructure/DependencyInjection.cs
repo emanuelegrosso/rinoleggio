@@ -1,0 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Rinoleggio.Infrastructure.Data;
+
+namespace Rinoleggio.Infrastructure;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddRinoleggioInfrastructure(
+        this IServiceCollection services,
+        string sqliteConnectionString)
+    {
+        services.AddDbContext<RinoleggioDbContext>(options =>
+            options.UseSqlite(sqliteConnectionString));
+
+        return services;
+    }
+}

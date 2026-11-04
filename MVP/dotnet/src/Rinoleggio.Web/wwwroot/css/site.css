@@ -1,0 +1,10 @@
+body {
+    font-family: system-ui, sans-serif;
+    margin: 2rem;
+    line-height: 1.5;
+}
+
+header a {
+    font-weight: 600;
+    text-decoration: none;
+}
