@@ -1,0 +1,15 @@
+@page
+@model Rinoleggio.Web.Pages.Account.IndexModel
+@{
+    ViewData["Title"] = "Il mio account";
+}
+
+<main class="account-home">
+    <h1>Ciao, @Model.DisplayName</h1>
+    <p>Email: @Model.Email</p>
+
+    <nav class="account-nav">
+        <a asp-page="/Account/Profile">Modifica profilo</a>
+        <a asp-page="/Listings/Index">I miei contratti (@Model.ListingCount)</a>
+    </nav>
+</main>

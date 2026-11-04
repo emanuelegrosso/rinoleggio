@@ -1,0 +1,60 @@
+@page
+@model Rinoleggio.Web.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Registrati";
+}
+
+<main class="form-page">
+    <h1>Crea account</h1>
+
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <div class="field">
+            <label asp-for="Input.FullName"></label>
+            <input asp-for="Input.FullName" autocomplete="name" />
+            <span asp-validation-for="Input.FullName"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="Input.Email"></label>
+            <input asp-for="Input.Email" autocomplete="email" />
+            <span asp-validation-for="Input.Email"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="Input.AccountType"></label>
+            <select asp-for="Input.AccountType" asp-items="Html.GetEnumSelectList<Rinoleggio.Domain.Enums.AccountType>()"></select>
+        </div>
+
+        <div class="field">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" autocomplete="new-password" />
+            <span asp-validation-for="Input.Password"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="Input.ConfirmPassword"></label>
+            <input asp-for="Input.ConfirmPassword" autocomplete="new-password" />
+            <span asp-validation-for="Input.ConfirmPassword"></span>
+        </div>
+
+        <div class="field checkbox">
+            <label>
+                <input asp-for="Input.PrivacyConsent" />
+                @Html.DisplayNameFor(m => m.Input.PrivacyConsent)
+            </label>
+            <span asp-validation-for="Input.PrivacyConsent"></span>
+        </div>
+
+        <button type="submit">Registrati</button>
+    </form>
+
+    <p class="form-footer">
+        Hai già un account? <a asp-page="/Account/Login">Accedi</a>
+    </p>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

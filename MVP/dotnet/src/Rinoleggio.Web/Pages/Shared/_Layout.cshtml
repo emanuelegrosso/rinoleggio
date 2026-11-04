@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Rinoleggio</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="/">Rinoleggio</a>
+        <nav class="header-nav">
+            <a asp-page="/Contratti/Index">Cerca contratti</a>
+            <a asp-page="/Contratti/Inserisci">Inserisci contratto</a>
+        </nav>
+    </header>
+    @RenderBody()
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

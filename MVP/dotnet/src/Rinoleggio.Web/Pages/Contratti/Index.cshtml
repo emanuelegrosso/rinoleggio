@@ -1,0 +1,114 @@
+@page
+@model Rinoleggio.Web.Pages.Contratti.IndexModel
+@{
+    ViewData["Title"] = "Cerca contratti NLT";
+}
+
+<main>
+    <h1>Cerca contratti in subentro</h1>
+
+    <form method="get" class="search-form form-page">
+        <div class="field">
+            <label asp-for="Query">Parole chiave</label>
+            <input asp-for="Query" placeholder="modello, titolo…" />
+        </div>
+        <div class="search-grid">
+            <div class="field">
+                <label asp-for="ProvinceId">Provincia</label>
+                <select asp-for="ProvinceId" asp-items="Model.ProvinceOptions">
+                    <option value="">— Tutte —</option>
+                </select>
+            </div>
+            <div class="field">
+                <label asp-for="BrandId">Marca</label>
+                <select asp-for="BrandId" asp-items="Model.BrandOptions">
+                    <option value="">— Tutte —</option>
+                </select>
+            </div>
+            <div class="field">
+                <label asp-for="RentalCompanyId">Società NLT</label>
+                <select asp-for="RentalCompanyId" asp-items="Model.RentalCompanyOptions">
+                    <option value="">— Tutte —</option>
+                </select>
+            </div>
+            <div class="field">
+                <label asp-for="FuelType">Alimentazione</label>
+                <select asp-for="FuelType" asp-items="Html.GetEnumSelectList<Rinoleggio.Domain.Enums.FuelType>()">
+                    <option value="">— Tutte —</option>
+                </select>
+            </div>
+            <div class="field">
+                <label asp-for="MonthlyFeeMin">Canone min (€)</label>
+                <input asp-for="MonthlyFeeMin" type="number" step="1" />
+            </div>
+            <div class="field">
+                <label asp-for="MonthlyFeeMax">Canone max (€)</label>
+                <input asp-for="MonthlyFeeMax" type="number" step="1" />
+            </div>
+            <div class="field">
+                <label asp-for="RemainingKmMin">Km residui min</label>
+                <input asp-for="RemainingKmMin" type="number" step="1" />
+            </div>
+        </div>
+        <button type="submit">Cerca</button>
+    </form>
+
+    <p class="results-meta">@Model.Results.TotalCount contratti trovati</p>
+
+    @if (!Model.Results.Items.Any())
+    {
+        <p class="muted">Nessun contratto corrisponde ai filtri. Prova ad ampliare la ricerca o <a asp-page="Inserisci">inserisci un contratto</a>.</p>
+    }
+    else
+    {
+        <ul class="contract-cards">
+            @foreach (var item in Model.Results.Items)
+            {
+                <li>
+                    <a asp-page="Detail" asp-route-id="@item.Id">
+                        <strong>@item.Title</strong>
+                    </a>
+                    <div>@item.BrandName @item.Model · @item.ProvinceName</div>
+                    <div class="highlight">
+                        @item.MonthlyFee.ToString("N0") €/mese @(item.VatIncluded ? "IVA incl." : "+ IVA")
+                        · @item.RemainingKm.ToString("N0") km residui
+                    </div>
+                    <div class="muted">@item.RentalCompanyName · scadenza @item.EndDate.ToString("d")</div>
+                </li>
+            }
+        </ul>
+
+        @if (Model.TotalPages > 1)
+        {
+            <nav class="pager">
+                @if (Model.Results.Page > 1)
+                {
+                    <a asp-page="Index"
+                       asp-route-ProvinceId="@Model.ProvinceId"
+                       asp-route-BrandId="@Model.BrandId"
+                       asp-route-RentalCompanyId="@Model.RentalCompanyId"
+                       asp-route-FuelType="@Model.FuelType"
+                       asp-route-MonthlyFeeMin="@Model.MonthlyFeeMin"
+                       asp-route-MonthlyFeeMax="@Model.MonthlyFeeMax"
+                       asp-route-RemainingKmMin="@Model.RemainingKmMin"
+                       asp-route-Query="@Model.Query"
+                       asp-route-PageNumber="@(Model.Results.Page - 1)">← Precedente</a>
+                }
+                <span>Pagina @Model.Results.Page di @Model.TotalPages</span>
+                @if (Model.Results.Page < Model.TotalPages)
+                {
+                    <a asp-page="Index"
+                       asp-route-ProvinceId="@Model.ProvinceId"
+                       asp-route-BrandId="@Model.BrandId"
+                       asp-route-RentalCompanyId="@Model.RentalCompanyId"
+                       asp-route-FuelType="@Model.FuelType"
+                       asp-route-MonthlyFeeMin="@Model.MonthlyFeeMin"
+                       asp-route-MonthlyFeeMax="@Model.MonthlyFeeMax"
+                       asp-route-RemainingKmMin="@Model.RemainingKmMin"
+                       asp-route-Query="@Model.Query"
+                       asp-route-PageNumber="@(Model.Results.Page + 1)">Successiva →</a>
+                }
+            </nav>
+        }
+    }
+</main>

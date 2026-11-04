@@ -1,0 +1,95 @@
+@model Rinoleggio.Web.Pages.Contratti.InserisciModel
+
+<div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+<h2>Annuncio</h2>
+<div class="field">
+    <label asp-for="Input.Title"></label>
+    <input asp-for="Input.Title" />
+    <span asp-validation-for="Input.Title"></span>
+</div>
+<div class="field">
+    <label asp-for="Input.DescriptionHtml">Descrizione (HTML)</label>
+    <textarea asp-for="Input.DescriptionHtml" rows="4"></textarea>
+</div>
+<div class="field">
+    <label asp-for="Input.ProvinceId">Provincia</label>
+    <select asp-for="Input.ProvinceId" asp-items="Model.ProvinceOptions"></select>
+</div>
+<div class="field">
+    <label asp-for="Input.TransferContributionType">Contributo subentro</label>
+    <select asp-for="Input.TransferContributionType" asp-items="Html.GetEnumSelectList<Rinoleggio.Domain.Enums.TransferContributionType>()"></select>
+</div>
+<div class="field">
+    <label asp-for="Input.TransferContributionAmount">Importo contributo (€)</label>
+    <input asp-for="Input.TransferContributionAmount" />
+</div>
+
+<h2>Contratto</h2>
+<div class="field">
+    <label asp-for="Input.RentalCompanyId">Società NLT</label>
+    <select asp-for="Input.RentalCompanyId" asp-items="Model.RentalCompanyOptions"></select>
+</div>
+<div class="field">
+    <label asp-for="Input.StartDate">Inizio contratto</label>
+    <input asp-for="Input.StartDate" type="date" />
+</div>
+<div class="field">
+    <label asp-for="Input.EndDate">Fine contratto</label>
+    <input asp-for="Input.EndDate" type="date" />
+    <span asp-validation-for="Input.EndDate"></span>
+</div>
+<div class="field">
+    <label asp-for="Input.MonthlyFee">Canone mensile (€)</label>
+    <input asp-for="Input.MonthlyFee" />
+</div>
+<div class="field checkbox">
+    <label><input asp-for="Input.VatIncluded" /> IVA inclusa</label>
+</div>
+<div class="field">
+    <label asp-for="Input.InitialPayment">Anticipo (€)</label>
+    <input asp-for="Input.InitialPayment" />
+</div>
+<div class="field">
+    <label asp-for="Input.TotalKm">Km totali</label>
+    <input asp-for="Input.TotalKm" />
+</div>
+<div class="field">
+    <label asp-for="Input.CurrentKm">Km percorsi</label>
+    <input asp-for="Input.CurrentKm" />
+</div>
+
+<h2>Veicolo</h2>
+<div class="field">
+    <label asp-for="Input.BrandId">Marca</label>
+    <select asp-for="Input.BrandId" asp-items="Model.BrandOptions"></select>
+</div>
+<div class="field">
+    <label asp-for="Input.Model"></label>
+    <input asp-for="Input.Model" />
+    <span asp-validation-for="Input.Model"></span>
+</div>
+<div class="field">
+    <label asp-for="Input.Version">Versione</label>
+    <input asp-for="Input.Version" />
+</div>
+<div class="field">
+    <label asp-for="Input.FuelType">Alimentazione</label>
+    <select asp-for="Input.FuelType" asp-items="Html.GetEnumSelectList<Rinoleggio.Domain.Enums.FuelType>()"></select>
+</div>
+<div class="field">
+    <label asp-for="Input.Transmission">Cambio</label>
+    <select asp-for="Input.Transmission" asp-items="Html.GetEnumSelectList<Rinoleggio.Domain.Enums.Transmission>()"></select>
+</div>
+<div class="field">
+    <label asp-for="Input.RegistrationYear">Anno immatricolazione</label>
+    <input asp-for="Input.RegistrationYear" />
+</div>
+
+<h2>Servizi inclusi</h2>
+<div class="field checkbox"><label><input asp-for="Input.MaintenanceIncluded" /> Manutenzione</label></div>
+<div class="field checkbox"><label><input asp-for="Input.InsuranceIncluded" /> Assicurazione</label></div>
+<div class="field checkbox"><label><input asp-for="Input.RoadsideAssistanceIncluded" /> Assistenza stradale</label></div>
+<div class="field checkbox"><label><input asp-for="Input.ReplacementCarIncluded" /> Auto sostitutiva</label></div>
+<div class="field checkbox"><label><input asp-for="Input.TiresIncluded" /> Pneumatici</label></div>
+<div class="field checkbox"><label><input asp-for="Input.RoadTaxIncluded" /> Bollo</label></div>
