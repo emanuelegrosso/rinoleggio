@@ -1,0 +1,18 @@
+@page
+@model Rinoleggio.Web.Pages.Listings.CreateModel
+@{
+    ViewData["Title"] = "Nuovo annuncio";
+}
+
+<main class="form-page">
+    <h1>Nuovo annuncio (bozza)</h1>
+    <form method="post">
+        <partial name="_ListingForm" model="Model" />
+        <button type="submit">Salva bozza</button>
+    </form>
+    <p class="form-footer"><a asp-page="Index">← I miei annunci</a></p>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

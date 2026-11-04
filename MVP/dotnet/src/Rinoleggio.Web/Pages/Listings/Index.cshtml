@@ -1,0 +1,44 @@
+@page
+@model Rinoleggio.Web.Pages.Listings.IndexModel
+@{
+    ViewData["Title"] = "I miei annunci";
+}
+
+<main>
+    <h1>I miei annunci</h1>
+    <p><a asp-page="Create">+ Nuovo annuncio</a></p>
+
+    @if (!Model.Items.Any())
+    {
+        <p class="muted">Non hai ancora annunci. Creane uno in bozza.</p>
+    }
+    else
+    {
+        <ul class="listing-list">
+            @foreach (var item in Model.Items)
+            {
+                <li>
+                    <strong>@item.Title</strong>
+                    @if (item.IsPublished)
+                    {
+                        <span class="badge">Pubblicato</span>
+                    }
+                    else
+                    {
+                        <span class="badge muted">Bozza</span>
+                    }
+                    — @item.BusinessStatus
+                    @if (item.Contract is not null)
+                    {
+                        <span> · @item.Contract.MonthlyFee.ToString("C")/mese · @item.Contract.RemainingKm km residui</span>
+                    }
+                    <div>
+                        <a asp-page="Edit" asp-route-id="@item.Id">Modifica</a>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+
+    <p class="form-footer"><a asp-page="/Account/Index">← Account</a></p>
+</main>
