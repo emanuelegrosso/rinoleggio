@@ -1,0 +1,42 @@
+@page
+@model Rinoleggio.Web.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Accedi";
+}
+
+<main class="form-page">
+    <h1>Accedi</h1>
+
+    <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <div class="field">
+            <label asp-for="Input.Email"></label>
+            <input asp-for="Input.Email" autocomplete="username" />
+            <span asp-validation-for="Input.Email"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" autocomplete="current-password" />
+            <span asp-validation-for="Input.Password"></span>
+        </div>
+
+        <div class="field checkbox">
+            <label>
+                <input asp-for="Input.RememberMe" />
+                @Html.DisplayNameFor(m => m.Input.RememberMe)
+            </label>
+        </div>
+
+        <button type="submit">Accedi</button>
+    </form>
+
+    <p class="form-footer">
+        Non hai un account? <a asp-page="/Account/Register">Registrati</a>
+    </p>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

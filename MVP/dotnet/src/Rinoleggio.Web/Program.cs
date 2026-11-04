@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Rinoleggio.Domain.Entities;
 using Rinoleggio.Infrastructure;
 using Rinoleggio.Infrastructure.Data;
+using Rinoleggio.Web.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,10 +23,15 @@ builder.Services
     {
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 8;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireLowercase = false;
         options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedAccount = false;
     })
     .AddEntityFrameworkStores<RinoleggioDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddErrorDescriber<ItalianIdentityErrorDescriber>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

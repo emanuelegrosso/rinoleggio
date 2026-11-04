@@ -1,3 +1,7 @@
+@using Microsoft.AspNetCore.Identity
+@using Rinoleggio.Domain.Entities
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -7,9 +11,24 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <a href="/">Rinoleggio</a>
+    <header class="site-header">
+        <a class="brand" href="/">Rinoleggio</a>
+        <nav class="header-nav">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <a asp-page="/Account/Index">Il mio account</a>
+                <form method="post" asp-page="/Account/Logout" class="inline-form">
+                    <button type="submit" class="link-button">Esci</button>
+                </form>
+            }
+            else
+            {
+                <a asp-page="/Account/Login">Accedi</a>
+                <a asp-page="/Account/Register">Registrati</a>
+            }
+        </nav>
     </header>
     @RenderBody()
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

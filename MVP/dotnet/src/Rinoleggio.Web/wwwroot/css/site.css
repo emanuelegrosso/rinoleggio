@@ -1,10 +1,110 @@
 body {
     font-family: system-ui, sans-serif;
-    margin: 2rem;
+    margin: 0;
     line-height: 1.5;
+    color: #1a1a1a;
 }
 
-header a {
-    font-weight: 600;
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.site-header .brand {
+    font-weight: 700;
     text-decoration: none;
+    color: inherit;
+}
+
+.header-nav {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.header-nav a {
+    text-decoration: none;
+    color: #2563eb;
+}
+
+main {
+    max-width: 40rem;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.form-page .field {
+    margin-bottom: 1rem;
+}
+
+.form-page label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.form-page input,
+.form-page select {
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+
+.field.checkbox label {
+    font-weight: normal;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.field.checkbox input {
+    width: auto;
+}
+
+.validation-summary,
+.field span[class*="validation"] {
+    color: #b91c1c;
+    font-size: 0.875rem;
+}
+
+.hint {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.status-ok {
+    color: #15803d;
+}
+
+.form-footer {
+    margin-top: 1.5rem;
+}
+
+.inline-form {
+    display: inline;
+    margin: 0;
+}
+
+.link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #2563eb;
+    cursor: pointer;
+    font: inherit;
+    text-decoration: underline;
+}
+
+.account-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.muted {
+    color: #666;
 }
